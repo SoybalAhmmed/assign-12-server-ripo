@@ -16,7 +16,14 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
 async function run(){
     try{
         await client.connect();
-        console.log("dv connected")
+        const serviceCollection = client.db('books_portal12').collection('services');
+
+        app.get('/service', async(req, res) =>{
+            const query = {};
+            const cursor = serviceCollection.find(query);
+            const services = await cursor.toArray();
+            res.send(services);
+        })
 
 
     }
