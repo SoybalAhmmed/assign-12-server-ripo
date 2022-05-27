@@ -18,6 +18,7 @@ async function run(){
         await client.connect();
         const serviceCollection = client.db('books_portal12').collection('services');
         const bookingCollection = client.db('books_portal12').collection('bookings');
+        const userCollection = client.db('books_portal12').collection('users');
 
         app.get('/service', async(req, res) =>{
             const query = {};
@@ -44,6 +45,18 @@ async function run(){
         const query = {email: email};
         const bookings = await bookingCollection.find(query).toArray();
         res.send(bookings);
+      })
+
+      app.put('/user/:email', async (req, res) => {
+        const email = req.params.email;
+        const user = req.body;
+        const filter = { email: email };
+        const options = { upsert: true };
+        const updateDoc = {
+          $set: user,
+        };
+        const result = await userCollection.updateOne(filter, updateDoc, options);
+        res.send({ result, token });
       })
 
 
