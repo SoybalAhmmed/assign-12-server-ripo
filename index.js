@@ -17,6 +17,7 @@ async function run(){
     try{
         await client.connect();
         const serviceCollection = client.db('books_portal12').collection('services');
+        const bookingCollection = client.db('books_portal12').collection('bookings');
 
         app.get('/service', async(req, res) =>{
             const query = {};
@@ -31,6 +32,12 @@ async function run(){
             const service = await serviceCollection.findOne(query);
             res.send(service);
         });
+
+        app.post('/booking', async(req, res) =>{
+          const booking = req.body;
+          const result = await bookingCollection.insertOne(booking);
+          res.send(result);
+      });
 
 
     }
