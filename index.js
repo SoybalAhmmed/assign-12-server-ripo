@@ -35,6 +35,7 @@ async function run(){
         const serviceCollection = client.db('books_portal12').collection('services');
         const bookingCollection = client.db('books_portal12').collection('bookings');
         const userCollection = client.db('books_portal12').collection('users');
+        const bookCollection = client.db('books_portal12').collection('books');
 
         app.get('/service', async(req, res) =>{
             const query = {};
@@ -113,6 +114,12 @@ async function run(){
         const token = jwt.sign({ email: email }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '1h' })
         res.send({ result, token });
       })
+
+      app.post('/book', verifyJWT, verifyAdmin, async (req, res) => {
+        const book = req.body;
+        const result = await bookCollection.insertOne(book);
+        res.send(result);
+      });
 
 
     }
